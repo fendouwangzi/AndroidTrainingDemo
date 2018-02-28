@@ -6,7 +6,9 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_cn_cfanr_jnisample_ParamsJni_intMethod(JNIEnv *env, jobject jobj, jint n) {
     jint sum = 0;
-    for(jint i =1; i <= n; i++) {
+    //由于一些版本不兼容，i不定义在for循环中
+    jint i=1;
+    for(; i <= n; i++) {
         sum += i;
     }
     return sum;
@@ -19,9 +21,9 @@ Java_cn_cfanr_jnisample_ParamsJni_stringMethod(JNIEnv *env, jobject jobj, jstrin
     const char *str = env->GetStringUTFChars(str_, 0);
 
     char ch[20] = "hello, ";
-    strcat(ch, str);
+    strcat(ch, str);//复制字符串
 
-    env->ReleaseStringUTFChars(str_, str);
+    env->ReleaseStringUTFChars(str_, str);//释放内存
 
     return env->NewStringUTF(ch);
 }
@@ -87,9 +89,18 @@ Java_cn_cfanr_jnisample_ParamsJni_personArrayListMethod(JNIEnv *env, jobject job
     jmethodID personMid = env->GetMethodID(personCls, "<init>", "(ILjava/lang/String;)V");
 
     jint i=0;
-    for(; i < 3; i++) {
+    //获取ArrayList的size方法
+    jmethodID  jmethodIdSize = env->GetMethodID(clazz,"size","()I");
+    jint n =   env->CallIntMethod(persons, jmethodIdSize, persons);
+    //获取ArrayList的get(int i)方法
+    jmethodID  jmethodIdGet = env->GetMethodID(clazz,"get","(I)Ljava/lang/Object;");
+
+    for(; i < n; i++) {
+        jobject personOld = env->CallObjectMethod(persons,jmethodIdGet,i);
+        jfieldID ageId = env->GetFieldID(personCls,"age","I");
+        jint age = env->GetIntField(personOld,ageId);
         jstring name = env->NewStringUTF("Native");
-        jobject person = env->NewObject(personCls, personMid, 18 +i, name);
+        jobject person = env->NewObject(personCls, personMid, age, name);
         //添加 person 到 ArrayList
         env->CallBooleanMethod(arrayList, addMid, person);
     }

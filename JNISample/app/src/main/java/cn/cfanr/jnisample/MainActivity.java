@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "调用前：num = " + fieldJni.num);
         Log.e(TAG, "调用后：" + fieldJni.addNum());
 
-        Log.e(TAG, "调用前：name = " + fieldJni.name);
+        Log.e(TAG, "调用前：name = " + FieldJni.name);
         fieldJni.accessStaticField();
-        Log.e(TAG, "调用后：" + fieldJni.name);
+        Log.e(TAG, "调用后：" + FieldJni.name);
 
         Log.e(TAG, "调用前：age = " + fieldJni.getAge());
         fieldJni.accessPrivateField();
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.e(TAG, "调用前：java list = " + personList.toString());
         Log.e(TAG, "调用后：jni list  = " + paramsJni.personArrayListMethod(personList).toString());
-
         /**
          * JNI 函数字符串处理
          */

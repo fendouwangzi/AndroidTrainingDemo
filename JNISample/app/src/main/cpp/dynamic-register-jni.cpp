@@ -56,6 +56,7 @@ static int registerNativeMethods(JNIEnv *env, const char *className,
     return JNI_OK;
 }
 
+//在应用层加载so的时候,虚拟机首先回去/自动执行JNI_OnLoad(...),所以在这里注册所有的方法/函数就好了,加载到虚拟机中,等待上面调用!
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     LOGI("call JNI_OnLoad");
 
